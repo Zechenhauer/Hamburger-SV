@@ -254,6 +254,31 @@
         }
         .btn-modal-open:hover { background: var(--hsv-blue); color: #fff; }
 
+        /* --- KADER DIASHOW KACHEL AUF DEM HAUPTBILDSCHIRM (OHNE BESCHREIBUNG) --- */
+        .kader-slider-wrapper {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #002b5c 0%, #070d1a 100%);
+            border: 2px solid var(--hsv-blue);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 77, 157, 0.3);
+        }
+
+        .kader-slide-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            transition: opacity 0.5s ease-in-out;
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.6));
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -344,7 +369,7 @@
             border-radius: 12px;
             padding: 20px;
             width: 100%;
-            max-width: 550px;
+            max-width: 750px;
             max-height: 85vh;
             display: flex;
             flex-direction: column;
@@ -354,6 +379,7 @@
             overflow-y: auto;
             max-height: 70vh;
             flex: 1;
+            padding-right: 4px;
         }
         .modal-body::-webkit-scrollbar { width: 6px; }
         .modal-body::-webkit-scrollbar-thumb { background: var(--hsv-blue); border-radius: 3px; }
@@ -549,9 +575,9 @@
     <!-- SLIDESHOW OBEN -->
     <div class="banner-wrapper">
         <div class="slideshow-container">
-            <button class="slide-btn slide-prev" onclick="prevSlide()">❮</button>
+            <button class="slide-btn slide-prev" onclick="prevBannerSlide()">❮</button>
             <img id="slideImage" src="" alt="Hamburger SV Diashow" class="slide-img">
-            <button class="slide-btn slide-next" onclick="nextSlide()">❯</button>
+            <button class="slide-btn slide-next" onclick="nextBannerSlide()">❯</button>
         </div>
         <div class="slide-caption" id="slideCaption">Hamburger SV</div>
     </div>
@@ -566,6 +592,18 @@
         <span>⚡ Web-App & Management: Jürgen Schützendorf</span>
         <span class="supabase-badge" id="cloudStatusBadge">● ESPN Live-Ticker Aktiv</span>
         <div class="live-badge" id="liveIndicatorBadge"><span class="live-dot"></span> LIVE-SPIEL LÄUFT</div>
+    </div>
+
+    <!-- SEKTION: KADER DIASHOW (GENAU IN DEINER REIHENFOLGE, OHNE TEXT) -->
+    <div class="section-box">
+        <div class="section-header">
+            <span>⚽ HSV-Kader Diashow</span>
+        </div>
+        <div class="kader-slider-wrapper">
+            <button class="slide-btn slide-prev" onclick="prevKaderSlide()">❮</button>
+            <img id="kaderSlideImg" src="" alt="HSV Kader" class="kader-slide-img">
+            <button class="slide-btn slide-next" onclick="nextKaderSlide()">❯</button>
+        </div>
     </div>
 
     <!-- HSV AUSWERTUNG -->
@@ -693,7 +731,6 @@
             <div style="display: flex; align-items: center; gap: 5px;"><span style="width: 12px; height: 12px; background: rgba(180, 40, 40, 0.5); border-radius: 2px; display: inline-block;"></span> Abstieg (17. - 18.)</div>
         </div>
 
-        <!-- BESUCHER COUNTER -->
         <div class="visitor-counter">
             👁️ App-Besucher insgesamt: <strong id="visitorCountDisplay">20</strong>
         </div>
@@ -789,7 +826,45 @@
     const ADMIN_PIN = "1887";
     let isAdmin = false;
 
-    // BESUCHER COUNTER (Startwert 20)
+    // KADER BILDER (Exakt in deiner gewünschten Reihenfolge)
+    const kaderImages = [
+        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Trainer01.png",
+        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Trainer02.png",
+        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Abwehr.png",
+        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Abwehr01.png",
+        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Abwehr_02.png",
+        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Mittelfeld.png",
+        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/mittelfeld%2001.png",
+        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Sturm.png",
+        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Sturm01.png"
+    ];
+
+    let currentKaderSlide = 0;
+    let kaderSlideInterval;
+
+    function showKaderSlide(index) {
+        if (index >= kaderImages.length) currentKaderSlide = 0;
+        else if (index < 0) currentKaderSlide = kaderImages.length - 1;
+        else currentKaderSlide = index;
+
+        let imgElem = document.getElementById('kaderSlideImg');
+        if (!imgElem) return;
+
+        imgElem.style.opacity = 0;
+        setTimeout(() => {
+            imgElem.src = kaderImages[currentKaderSlide];
+            imgElem.style.opacity = 1;
+        }, 200);
+    }
+
+    function nextKaderSlide() { showKaderSlide(currentKaderSlide + 1); resetKaderTimer(); }
+    function prevKaderSlide() { showKaderSlide(currentKaderSlide - 1); resetKaderTimer(); }
+    function resetKaderTimer() {
+        clearInterval(kaderSlideInterval);
+        kaderSlideInterval = setInterval(() => { showKaderSlide(currentKaderSlide + 1); }, 4000);
+    }
+
+    // BESUCHER COUNTER
     function initVisitorCounter() {
         let count = parseInt(localStorage.getItem('hsv_app_visitors') || '20');
         if (!sessionStorage.getItem('visited_hsv_session')) {
@@ -800,7 +875,7 @@
         document.getElementById('visitorCountDisplay').textContent = count.toLocaleString('de-DE');
     }
 
-    // SLIDESHOW (Aktualisiert mit den 4 gewünschten Links)
+    // SLIDESHOW OBEN
     const slides = [
         { url: "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/vereinslogos/hsv%20fans.png", name: "HSV Fans" },
         { url: "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/vereinslogos/hsv%20mannschaft.png", name: "HSV Mannschaft" },
@@ -809,6 +884,30 @@
     ];
     let currentSlideIndex = 0;
     let slideInterval;
+
+    function showSlide(index) {
+        if (index >= slides.length) currentSlideIndex = 0;
+        else if (index < 0) currentSlideIndex = slides.length - 1;
+        else currentSlideIndex = index;
+
+        let imgElem = document.getElementById('slideImage');
+        let captionElem = document.getElementById('slideCaption');
+        if (!imgElem) return;
+
+        imgElem.style.opacity = 0;
+        setTimeout(() => {
+            imgElem.src = slides[currentSlideIndex].url;
+            captionElem.textContent = slides[currentSlideIndex].name;
+            imgElem.style.opacity = 1;
+        }, 200);
+    }
+
+    function nextBannerSlide() { showSlide(currentSlideIndex + 1); resetTimer(); }
+    function prevBannerSlide() { showSlide(currentSlideIndex - 1); resetTimer(); }
+    function resetTimer() {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(() => { showSlide(currentSlideIndex + 1); }, 5000);
+    }
 
     const legendenInfos = {
         "Uwe Seeler": "Uwe Seeler („Unser Uwe“) ist die absolute Ikone des Hamburger SV und des deutschen Fußballs. Er erzielte hunderte Tore für den HSV und war Ehrenspielführer der Nationalmannschaft.",
@@ -837,30 +936,6 @@
     function nextHistorieFakt() {
         historieIdx = (historieIdx + 1) % historieFakten.length;
         document.getElementById('historieWidget').textContent = `"${historieFakten[historieIdx]}"`;
-    }
-
-    function showSlide(index) {
-        if (index >= slides.length) currentSlideIndex = 0;
-        else if (index < 0) currentSlideIndex = slides.length - 1;
-        else currentSlideIndex = index;
-
-        let imgElem = document.getElementById('slideImage');
-        let captionElem = document.getElementById('slideCaption');
-        if (!imgElem) return;
-
-        imgElem.style.opacity = 0;
-        setTimeout(() => {
-            imgElem.src = slides[currentSlideIndex].url;
-            captionElem.textContent = slides[currentSlideIndex].name;
-            imgElem.style.opacity = 1;
-        }, 200);
-    }
-
-    function nextSlide() { showSlide(currentSlideIndex + 1); resetTimer(); }
-    function prevSlide() { showSlide(currentSlideIndex - 1); resetTimer(); }
-    function resetTimer() {
-        clearInterval(slideInterval);
-        slideInterval = setInterval(() => { showSlide(currentSlideIndex + 1); }, 5000);
     }
 
     let teamLogos = {};
@@ -1095,7 +1170,6 @@
                         let prev = previousEspnScores[matchId];
                         if (prev !== undefined && isLive) {
                             if (homeScoreVal > prev.home || awayScoreVal > prev.away) {
-                                // Triggert jetzt für alle Live-Spiele (ohne Hamburg-Einschränkung)
                                 triggerGoalPush(homeComp.team.displayName, awayComp.team.displayName, homeScoreVal, awayScoreVal, latestScorerText);
                             }
                         }
@@ -1190,7 +1264,7 @@
             lastWidget.innerHTML = "Noch kein beendetes Spiel.";
         }
 
-        // --- FORMVERLAUF (Letzte 15 Spiele) ---
+        // --- FORMVERLAUF ---
         let formWidget = document.getElementById('formCurveWidget');
         if (pastMatches.length > 0) {
             let last15 = pastMatches.slice(-15);
@@ -1207,7 +1281,7 @@
             formWidget.innerHTML = '<span style="color:var(--text-muted); font-size:0.85rem;">Noch keine beendeten Spiele</span>';
         }
 
-        // --- TOP 3 TORSCHÜTZEN KACHEL (HAMBURGER SV) ---
+        // --- TOP 3 TORSCHÜTZEN ---
         let hsvScorersMap = {};
         pastMatches.forEach(m => {
             let parseScorers = (gList, teamName) => {
@@ -1540,6 +1614,8 @@
     initVisitorCounter();
     showSlide(0);
     resetTimer();
+    showKaderSlide(0);
+    resetKaderTimer();
     loadEspnMatchdayData();
 
     // LIVE-AKTUALISIERUNG ALLE 30 SEKUNDEN
