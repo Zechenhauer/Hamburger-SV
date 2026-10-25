@@ -254,7 +254,7 @@
         }
         .btn-modal-open:hover { background: var(--hsv-blue); color: #fff; }
 
-        /* --- KADER DIASHOW KACHEL AUF DEM HAUPTBILDSCHIRM (OHNE BESCHREIBUNG) --- */
+        /* --- KADER DIASHOW KACHEL AUF DEM HAUPTBILDSCHIRM --- */
         .kader-slider-wrapper {
             position: relative;
             width: 100%;
@@ -583,9 +583,9 @@
     </div>
 
     <div class="title-row">
-        <img src="https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/vereinslogos/hsv.png" alt="HSV Logo" class="header-logo">
+        <img src="https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/hsv.png" alt="HSV Logo" class="header-logo">
         <h2>Hamburger <span>SV</span></h2>
-        <img src="https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/vereinslogos/hsv.png" alt="HSV Logo" class="header-logo">
+        <img src="https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/hsv.png" alt="HSV Logo" class="header-logo">
     </div>
     <div class="subtitle" id="leagueSubtitle">1. Bundesliga — Saison 2026/27 (Mit ESPN Live-Sync)</div>
     <div class="meta-info">
@@ -594,7 +594,7 @@
         <div class="live-badge" id="liveIndicatorBadge"><span class="live-dot"></span> LIVE-SPIEL LÄUFT</div>
     </div>
 
-    <!-- SEKTION: KADER DIASHOW (GENAU IN DEINER REIHENFOLGE, OHNE TEXT) -->
+    <!-- SEKTION: KADER DIASHOW -->
     <div class="section-box">
         <div class="section-header">
             <span>⚽ HSV-Kader Diashow</span>
@@ -826,17 +826,17 @@
     const ADMIN_PIN = "1887";
     let isAdmin = false;
 
-    // KADER BILDER (Exakt in deiner gewünschten Reihenfolge)
+    // KADER BILDER (Mit absoluten GitHub Raw-Links)
     const kaderImages = [
-        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Trainer01.png",
-        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Trainer02.png",
-        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Abwehr.png",
-        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Abwehr01.png",
-        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Abwehr_02.png",
-        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Mittelfeld.png",
-        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/mittelfeld%2001.png",
-        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Sturm.png",
-        "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/HSV%20Spielerfotos/Sturm01.png"
+        "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/Trainer01.png",
+        "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/Trainer02.png",
+        "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/Abwehr.png",
+        "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/Abwehr01.png",
+        "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/Abwehr_02.png",
+        "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/Mittelfeld.png",
+        "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/mittelfeld%2001.png",
+        "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/Sturm.png",
+        "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/Sturm01.png"
     ];
 
     let currentKaderSlide = 0;
@@ -875,12 +875,12 @@
         document.getElementById('visitorCountDisplay').textContent = count.toLocaleString('de-DE');
     }
 
-    // SLIDESHOW OBEN
+    // SLIDESHOW OBEN (Mit absoluten GitHub Raw-Links)
     const slides = [
-        { url: "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/vereinslogos/hsv%20fans.png", name: "HSV Fans" },
-        { url: "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/vereinslogos/hsv%20mannschaft.png", name: "HSV Mannschaft" },
-        { url: "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/vereinslogos/hsv%20fans01.png", name: "HSV Stimmung" },
-        { url: "https://lhusylpjnujlqomougmg.supabase.co/storage/v1/object/public/vereinslogos/hsv%20mannschaft.png", name: "HSV Team" }
+        { url: "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/hsv%20fans.png", name: "HSV Fans" },
+        { url: "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/hsv%20mannschaft.png", name: "HSV Mannschaft" },
+        { url: "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/hsv%20fans01.png", name: "HSV Stimmung" },
+        { url: "https://raw.githubusercontent.com/Zechenhauer/hamburg-sv/main/hsv%20stadion.png", name: "HSV Stadion" }
     ];
     let currentSlideIndex = 0;
     let slideInterval;
@@ -1138,7 +1138,7 @@
                                     || "";
 
                                 if (!playerName && detail.text) {
-                                    let cleanText = detail.text.replace(/scored.*\$/, '').trim();
+                                    let cleanText = detail.text.replace(/scored.*$/, '').trim();
                                     if (cleanText && cleanText.toLowerCase() !== 'goal') {
                                         playerName = cleanText;
                                     }
